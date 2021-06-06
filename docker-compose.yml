@@ -1,45 +1,44 @@
 version: '3.1'
-
 services:
-  springboot:
-    image: dockerhandson/spring-boot-mongo:latest
-    restart: always # This will be ignored if we deploy in docker swarm
-    environment:
+ maven-web-app:
+  image: vikash463/spring-boot-mongo:1
+  environment:
     - MONGO_DB_HOSTNAME=mongo
-    - MONGO_DB_USERNAME=devdb
-    - MONGO_DB_PASSWORD=devdb123
-    ports:
-      - 8080:8080
-    working_dir: /opt/app
-    depends_on:
-      - mongo
-    networks:
-    - springappnetwork  
-    deploy:  # This will be considered only in docker swarm.
-      replicas: 2
-      update_config:
-        parallelism: 1
-        delay: 20s
-      restart_policy:
-        condition: on-failure
-        delay: 10s
-        max_attempts: 5
+    - MONGO_DB_USERNAME=user1
+    - MONGO_DB_PASSWORD=passwd
+  container_name: springboot
+  ports:
+    - 8083:8080
+  working_dir: /opt/test
+  depends_on:
+   - mongo
+  networks:
+   - springappnetwork
+  deploy:
+   replicas: 2
+   update_config:
+    parallelism: 1
+    delay: 10s
+   restart_policy:
+    condition: on-failure
+    delay: 20s
+    max_attempts: 3
 
-  mongo:
-    image: mongo
-    environment:
-    - MONGO_INITDB_ROOT_USERNAME=devdb
-    - MONGO_INITDB_ROOT_PASSWORD=devdb123
-    volumes:
-      - mongodb:/data/db
-    restart: always
-    networks:
-    - springappnetwork
-    
+ mongo:
+  image: mongo
+  container_name: mongo
+  environment:
+   - MONGO_INITDB_ROOT_USERNAME=user1
+   - MONGO_INITDB_ROOT_PASSWORD=passwd
+  volumes:
+   - spring-vol:/data/db
+  networks:
+   - springappnetwork
+
+
 volumes:
-  mongodb:
-    external: true
-    
+ spring-vol:
+  driver: local
 networks:
-  springappnetwork:
-    external: true
+ springappnetwork:
+  driver: overlay
