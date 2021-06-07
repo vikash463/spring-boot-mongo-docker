@@ -7,7 +7,7 @@ services:
     - MONGO_DB_USERNAME=user1
     - MONGO_DB_PASSWORD=passwd
   ports:
-    - 9595:8080
+    - 9588:8080
   working_dir: /opt/test
   depends_on:
    - mongo
