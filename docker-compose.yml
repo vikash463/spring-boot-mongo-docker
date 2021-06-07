@@ -1,6 +1,6 @@
 version: '3.1'
 services:
- maven-web-app:
+ maven-web-app-app:
   image: vikash463/spring-boot-mongo:1
   environment:
     - MONGO_DB_HOSTNAME=mongo
